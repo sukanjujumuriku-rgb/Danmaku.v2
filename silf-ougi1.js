@@ -10,7 +10,7 @@ function updateOugi1(){
         ougi1Timer % 120 === 1
     ){
 
-        const r = 140;
+        const r = 200;
 
         for(
             let i = 0;
