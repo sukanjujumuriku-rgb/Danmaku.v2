@@ -1,3 +1,4 @@
+alert("game.js");
 const canvas =
     document.getElementById(
         "game"
