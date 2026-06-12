@@ -39,7 +39,7 @@ function updateOugi1(){
             ){
 
                 const a =
-                    Math.PI * 2 / 32 * j;
+                    Math.PI * 2 / 16 * j;
 
                 spawnEnemyBullet(
                     cx,
