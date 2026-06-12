@@ -34,7 +34,7 @@ function updateOugi1(){
 
             for(
                 let j = 0;
-                j < 32;
+                j < 16;
                 j++
             ){
 
