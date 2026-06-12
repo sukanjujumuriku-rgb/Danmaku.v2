@@ -7,7 +7,7 @@ function updateOugi1(){
     // 2秒ごとに発動
 
     if(
-        ougi1Timer % 120 === 1
+        ougi1Timer % 180 === 1
     ){
 
         const r = 200;
