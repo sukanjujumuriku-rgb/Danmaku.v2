@@ -111,6 +111,23 @@ function drawSilf(){
         240,
         40
     );
+
+    switch(
+        silf.spell
+    ){
+
+        case 2:
+            drawOugi3();
+            break;
+
+        case 3:
+            drawOugi4();
+            break;
+
+        case 4:
+            drawOugi5();
+            break;
+    }
 }
 
 function updateEnemyBullets(){
@@ -124,6 +141,32 @@ function updateEnemyBullets(){
 
         const b =
             enemyBullets[i];
+
+        // 曲線弾対応
+
+        if(
+            b.curve
+        ){
+
+            b.angle +=
+                b.turn;
+
+            const speed =
+                Math.sqrt(
+                    b.vx * b.vx +
+                    b.vy * b.vy
+                );
+
+            b.vx =
+                Math.cos(
+                    b.angle
+                ) * speed;
+
+            b.vy =
+                Math.sin(
+                    b.angle
+                ) * speed;
+        }
 
         b.x += b.vx;
         b.y += b.vy;
@@ -152,10 +195,10 @@ function updateEnemyBullets(){
         }
 
         if(
-            b.x < -100 ||
-            b.x > canvas.width + 100 ||
-            b.y < -100 ||
-            b.y > canvas.height + 100
+            b.x < -150 ||
+            b.x > canvas.width + 150 ||
+            b.y < -150 ||
+            b.y > canvas.height + 150
         ){
 
             enemyBullets.splice(
@@ -168,11 +211,21 @@ function updateEnemyBullets(){
 
 function drawEnemyBullets(){
 
-    ctx.fillStyle =
-        "orange";
-
     enemyBullets.forEach(
         b=>{
+
+            if(
+                b.curve
+            ){
+
+                ctx.fillStyle =
+                    "red";
+            }
+            else{
+
+                ctx.fillStyle =
+                    "orange";
+            }
 
             ctx.beginPath();
 
