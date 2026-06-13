@@ -67,27 +67,29 @@ function updateOugi1(){
             }
 
             if(
-                ougi1Timer % 120 === 80
-            ){
+    ougi1Timer % 120 === 80
+){
 
-                const dx =
-                    player.x - b.x;
+    const dx =
+        player.x - b.x;
 
-                const dy =
-                    player.y - b.y;
+    const dy =
+        player.y - b.y;
 
-                const len =
-                    Math.sqrt(
-                        dx*dx +
-                        dy*dy
-                    ) || 1;
+    const len =
+        Math.sqrt(
+            dx*dx +
+            dy*dy
+        ) || 1;
 
-                b.vx =
-                    dx / len * 4;
+    b.vx =
+        dx / len * 4;
 
-                b.vy =
-                    dy / len * 4;
-            }
+    b.vy =
+        dy / len * 4;
+
+    b.life = 60;
+}
         }
     );
 }
