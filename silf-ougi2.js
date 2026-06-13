@@ -4,101 +4,109 @@ function updateOugi2(){
 
     ougi2Timer++;
 
-    // ケージ生成
+    // 前回のリング削除
 
-    if(
-        ougi2Timer % 90 === 1
+    for(
+        let i =
+        enemyBullets.length - 1;
+        i >= 0;
+        i--
     ){
 
-        const r = 260;
-
-        for(
-            let i = 0;
-            i < 72;
-            i++
+        if(
+            enemyBullets[i].spell === 2
         ){
 
-            const a =
-                Math.PI * 2 / 72 * i;
-
-            spawnEnemyBullet(
-
-                canvas.width / 2 +
-                Math.cos(a) * r,
-
-                canvas.height / 2 +
-                Math.sin(a) * r,
-
-                -Math.cos(a) * 0.8,
-
-                -Math.sin(a) * 0.8,
-
-                5
+            enemyBullets.splice(
+                i,
+                1
             );
         }
     }
 
-    // 回転
+    const centerX =
+        canvas.width / 2;
 
-    enemyBullets.forEach(
-        b=>{
+    const centerY =
+        canvas.height / 2;
 
-            const dx =
-                b.x -
-                canvas.width / 2;
+    // 半径80〜280を往復
 
-            const dy =
-                b.y -
-                canvas.height / 2;
+    const r =
 
-            const tx =
-                -dy * 0.002;
+        180 +
 
-            const ty =
-                dx * 0.002;
+        Math.sin(
+            ougi2Timer * 0.03
+        ) * 100;
 
-            b.vx += tx;
-            b.vy += ty;
-        }
-    );
-
-    // 分裂
-
-    if(
-        ougi2Timer % 180 === 0
+    for(
+        let i = 0;
+        i < 72;
+        i++
     ){
 
-        const add = [];
+        // 北
 
-        enemyBullets.forEach(
-            b=>{
+        if(
+            i >= 69 ||
+            i <= 3
+        ){
+            continue;
+        }
 
-                add.push({
+        // 東
 
-                    x:b.x,
-                    y:b.y,
+        if(
+            i >= 15 &&
+            i <= 21
+        ){
+            continue;
+        }
 
-                    vx:b.vx + 1,
-                    vy:b.vy,
+        // 南
 
-                    radius:4
-                });
+        if(
+            i >= 33 &&
+            i <= 39
+        ){
+            continue;
+        }
 
-                add.push({
+        // 西
 
-                    x:b.x,
-                    y:b.y,
+        if(
+            i >= 51 &&
+            i <= 57
+        ){
+            continue;
+        }
 
-                    vx:b.vx - 1,
-                    vy:b.vy,
+        const a =
 
-                    radius:4
-                });
-            }
-        );
+            Math.PI * 2 / 72 * i
 
-        enemyBullets.push(
-            ...add
-        );
+            +
+
+            ougi2Timer * 0.01;
+
+        enemyBullets.push({
+
+            x:
+                centerX +
+                Math.cos(a) * r,
+
+            y:
+                centerY +
+                Math.sin(a) * r,
+
+            vx:0,
+
+            vy:0,
+
+            radius:6,
+
+            spell:2
+        });
     }
 }
