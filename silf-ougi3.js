@@ -206,7 +206,7 @@ function updateOugi3(){
             if(
                 dist <
                 player.radius +
-                8
+                60
             ){
 
                 player.hp = 0;
@@ -234,7 +234,7 @@ function drawOugi3(){
                 ctx.strokeStyle =
                     "white";
 
-                ctx.lineWidth = 16;
+                ctx.lineWidth = 60;
             }
 
             ctx.beginPath();
