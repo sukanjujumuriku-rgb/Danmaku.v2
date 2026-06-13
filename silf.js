@@ -172,6 +172,25 @@ function updateEnemyBullets(){
         b.x += b.vx;
         b.y += b.vy;
 
+        if(
+    b.life !== undefined
+){
+
+    b.life--;
+
+    if(
+        b.life <= 0
+    ){
+
+        enemyBullets.splice(
+            i,
+            1
+        );
+
+        continue;
+    }
+}
+
         const dx =
             b.x - player.x;
 
