@@ -35,6 +35,19 @@ function spawnEnemyBullet(
 
 function updateSilf(){
 
+if(
+    silf.spell !==
+    Math.min(
+        4,
+        Math.floor(
+            silf.timer / 720
+        )
+    )
+){
+
+    enemyBullets.length = 0;
+}
+
     silf.timer++;
 
     silf.spell =
