@@ -97,50 +97,54 @@ function updateOugi3(){
         );
     }
 
-    // ラスト
+    // 空裂乱舞
 
     if(
         ougi3Timer >= 720 &&
-        ougi3Timer % 30 === 0
+        ougi3Timer % 10 === 0
     ){
 
-        const base =
-
-            Math.atan2(
-                player.y - silf.y,
-                player.x - silf.x
-            );
-
         for(
-            let i=-6;
-            i<=6;
+            let i = 0;
+            i < 6;
             i++
         ){
 
-            const a =
-                base +
-                i * 0.08;
+            const cx =
+                Math.random() *
+                canvas.width;
+
+            const cy =
+                Math.random() *
+                canvas.height;
+
+            const angle =
+                Math.random() *
+                Math.PI * 2;
 
             addLaser(
 
-                silf.x,
-                silf.y,
+                cx -
+                Math.cos(angle) * 1500,
 
-                silf.x +
-                Math.cos(a)*2000,
+                cy -
+                Math.sin(angle) * 1500,
 
-                silf.y +
-                Math.sin(a)*2000
+                cx +
+                Math.cos(angle) * 1500,
+
+                cy +
+                Math.sin(angle) * 1500
             );
         }
     }
 
-    // レーザー更新
+    // 更新
 
     for(
-        let i=
-        lasers.length-1;
-        i>=0;
+        let i =
+        lasers.length - 1;
+        i >= 0;
         i--
     ){
 
@@ -206,7 +210,7 @@ function updateOugi3(){
             if(
                 dist <
                 player.radius +
-                60
+                30
             ){
 
                 player.hp = 0;
@@ -227,14 +231,37 @@ function drawOugi3(){
                 ctx.strokeStyle =
                     "rgba(0,255,255,0.7)";
 
-                ctx.lineWidth = 4;
+                ctx.lineWidth = 6;
             }
             else{
+
+                // 外側
+
+                ctx.strokeStyle =
+                    "rgba(255,255,255,0.25)";
+
+                ctx.lineWidth = 90;
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    l.x1,
+                    l.y1
+                );
+
+                ctx.lineTo(
+                    l.x2,
+                    l.y2
+                );
+
+                ctx.stroke();
+
+                // 内側
 
                 ctx.strokeStyle =
                     "white";
 
-                ctx.lineWidth = 60;
+                ctx.lineWidth = 40;
             }
 
             ctx.beginPath();
