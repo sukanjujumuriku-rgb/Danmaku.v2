@@ -1,127 +1,259 @@
 let ougi5Timer = 0;
 
+const blindLasers = [];
+
 function updateOugi5(){
 
     ougi5Timer++;
 
-    const cycle =
-        ougi5Timer % 180;
+    const phase =
 
-    // 後ろ
+        Math.floor(
+            ougi5Timer / 90
+        ) % 4;
 
-    if(cycle === 1){
+    const local =
 
-        silf.x =
-            player.x;
+        ougi5Timer % 90;
 
-        silf.y =
-            player.y + 160;
+    // 出現位置
 
-        fireBlindSpot();
+    if(
+        local === 1
+    ){
+
+        switch(
+            phase
+        ){
+
+            // 上
+
+            case 0:
+
+                silf.x =
+                    player.x;
+
+                silf.y =
+                    player.y - 180;
+
+                break;
+
+            // 右
+
+            case 1:
+
+                silf.x =
+                    player.x + 180;
+
+                silf.y =
+                    player.y;
+
+                break;
+
+            // 下
+
+            case 2:
+
+                silf.x =
+                    player.x;
+
+                silf.y =
+                    player.y + 180;
+
+                break;
+
+            // 左
+
+            case 3:
+
+                silf.x =
+                    player.x - 180;
+
+                silf.y =
+                    player.y;
+
+                break;
+        }
+
+        const angle =
+
+            Math.atan2(
+
+                player.y -
+                silf.y,
+
+                player.x -
+                silf.x
+            );
+
+        blindLasers.push({
+
+            x1:silf.x,
+            y1:silf.y,
+
+            x2:
+                silf.x +
+                Math.cos(angle)
+                * 2000,
+
+            y2:
+                silf.y +
+                Math.sin(angle)
+                * 2000,
+
+            timer:0,
+
+            fired:false
+        });
     }
 
-    // 左
+    // 更新
 
-    if(cycle === 60){
+    for(
+        let i =
+        blindLasers.length - 1;
+        i >= 0;
+        i--
+    ){
 
-        silf.x =
-            player.x - 160;
+        const l =
+            blindLasers[i];
 
-        silf.y =
-            player.y;
+        l.timer++;
 
-        fireBlindSpot();
+        if(
+            l.timer >= 45
+        ){
+
+            l.fired = true;
+        }
+
+        if(
+            l.timer >= 75
+        ){
+
+            blindLasers.splice(
+                i,
+                1
+            );
+        }
     }
 
-    // 右
+    // 当たり判定
 
-    if(cycle === 120){
-
-        silf.x =
-            player.x + 160;
-
-        silf.y =
-            player.y;
-
-        fireBlindSpot();
-    }
-
-    // 弾を曲げる
-
-    enemyBullets.forEach(
-        b=>{
+    blindLasers.forEach(
+        l=>{
 
             if(
-                b.curve
+                !l.fired
+            ){
+                return;
+            }
+
+            const A =
+                l.y2 - l.y1;
+
+            const B =
+                l.x1 - l.x2;
+
+            const C =
+
+                l.x2 * l.y1 -
+
+                l.x1 * l.y2;
+
+            const dist =
+
+                Math.abs(
+
+                    A * player.x +
+
+                    B * player.y +
+
+                    C
+                )
+
+                /
+
+                Math.sqrt(
+                    A*A +
+                    B*B
+                );
+
+            if(
+                dist <
+                player.radius +
+                35
             ){
 
-                b.angle +=
-                    b.turn;
+                if(
+                    !player.debug
+                ){
 
-                const speed =
-
-                    Math.sqrt(
-                        b.vx*b.vx +
-                        b.vy*b.vy
-                    );
-
-                b.vx =
-                    Math.cos(
-                        b.angle
-                    ) * speed;
-
-                b.vy =
-                    Math.sin(
-                        b.angle
-                    ) * speed;
+                    player.hp = 0;
+                }
             }
         }
     );
 }
 
-function fireBlindSpot(){
-
-    const base =
-
-        Math.atan2(
-            player.y - silf.y,
-            player.x - silf.x
-        );
-
-    for(
-        let i=-8;
-        i<=8;
-        i++
-    ){
-
-        const a =
-            base +
-            i * 0.12;
-
-        enemyBullets.push({
-
-            x:silf.x,
-            y:silf.y,
-
-            vx:
-                Math.cos(a) * 5,
-
-            vy:
-                Math.sin(a) * 5,
-
-            radius:5,
-
-            curve:true,
-
-            angle:a,
-
-            turn:
-                (Math.random()-0.5)
-                * 0.02
-        });
-    }
-}
-
 function drawOugi5(){
 
+    blindLasers.forEach(
+        l=>{
+
+            if(
+                !l.fired
+            ){
+
+                ctx.strokeStyle =
+                    "rgba(0,255,255,0.8)";
+
+                ctx.lineWidth =
+                    6;
+            }
+            else{
+
+                ctx.strokeStyle =
+                    "rgba(255,255,255,0.25)";
+
+                ctx.lineWidth =
+                    100;
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    l.x1,
+                    l.y1
+                );
+
+                ctx.lineTo(
+                    l.x2,
+                    l.y2
+                );
+
+                ctx.stroke();
+
+                ctx.strokeStyle =
+                    "white";
+
+                ctx.lineWidth =
+                    40;
+            }
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                l.x1,
+                l.y1
+            );
+
+            ctx.lineTo(
+                l.x2,
+                l.y2
+            );
+
+            ctx.stroke();
+        }
+    );
 }
