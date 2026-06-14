@@ -217,16 +217,20 @@ function updateEnemyBullets(){
             );
 
         if(
-            dist <
-            player.radius +
-            b.radius
-        ){
+    dist <
+    player.radius +
+    b.radius
+){
 
-            player.hp = 0;
+    if(
+        !player.debug
+    ){
 
-            return;
-        }
+        player.hp = 0;
 
+        return;
+    }
+}
         if(
             b.x < -150 ||
             b.x > canvas.width + 150 ||
