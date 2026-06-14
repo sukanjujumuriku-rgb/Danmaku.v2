@@ -107,6 +107,20 @@ function drawUI(){
 
 function gameLoop(){
 
+    if(
+    fTimer > 0
+){
+
+    fTimer--;
+
+    if(
+        fTimer <= 0
+    ){
+
+        fCount = 0;
+    }
+}
+
     ctx.clearRect(
         0,
         0,
