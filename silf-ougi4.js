@@ -1,105 +1,166 @@
 let ougi4Timer = 0;
 
-let spiralAngle = 0;
-
 function updateOugi4(){
 
     ougi4Timer++;
+
+    silf.x =
+        canvas.width / 2;
+
+    silf.y =
+        150;
+
+    let rotSpeed = 0;
+
+    const cycle =
+        ougi4Timer % 360;
+
+    // 正転
+
+    if(
+        cycle < 120
+    ){
+
+        rotSpeed = 0.08;
+    }
+
+    // 停止
+
+    else if(
+        cycle < 180
+    ){
+
+        rotSpeed = 0;
+    }
+
+    // 逆転
+
+    else if(
+        cycle < 300
+    ){
+
+        rotSpeed = -0.08;
+    }
+
+    // 超加速
+
+    else{
+
+        rotSpeed = 0.25;
+    }
 
     if(
         ougi4Timer % 2 === 0
     ){
 
-        spiralAngle += 0.12;
+        const base =
 
-        const reverse =
-
-            Math.floor(
-                ougi4Timer / 240
-            ) % 2
-
-            ? -1
-            : 1;
+            ougi4Timer *
+            rotSpeed;
 
         for(
-            let k=0;
-            k<4;
-            k++
+            let ring = 0;
+            ring < 3;
+            ring++
         ){
 
-            const a =
+            const angle =
 
-                spiralAngle *
-                reverse
+                base +
 
-                +
+                ring *
 
-                Math.PI/2*k;
-
-            const vx =
-                Math.cos(a)*3;
-
-            const vy =
-                Math.sin(a)*3;
+                Math.PI * 2 / 3;
 
             spawnEnemyBullet(
+
                 silf.x,
+
                 silf.y,
-                vx,
-                vy,
-                5
+
+                Math.cos(angle) * 3,
+
+                Math.sin(angle) * 3,
+
+                6
+            );
+
+            spawnEnemyBullet(
+
+                silf.x,
+
+                silf.y,
+
+                Math.cos(
+                    angle +
+                    Math.PI
+                ) * 3,
+
+                Math.sin(
+                    angle +
+                    Math.PI
+                ) * 3,
+
+                6
             );
         }
     }
 
-    // 分裂
+    // 停止直前にリング生成
 
     if(
-        ougi4Timer % 120 === 0
+        cycle === 118 ||
+        cycle === 298
     ){
 
-        const add = [];
+        for(
+            let i = 0;
+            i < 36;
+            i++
+        ){
 
-        enemyBullets.forEach(
-            b=>{
+            const a =
 
-                add.push({
+                Math.PI * 2 / 36
+                * i;
 
-                    x:b.x,
-                    y:b.y,
+            spawnEnemyBullet(
 
-                    vx:
-                        b.vx + 1,
+                silf.x,
 
-                    vy:
-                        b.vy + 1,
+                silf.y,
 
-                    radius:4
-                });
+                Math.cos(a) * 2,
 
-                add.push({
+                Math.sin(a) * 2,
 
-                    x:b.x,
-                    y:b.y,
-
-                    vx:
-                        b.vx - 1,
-
-                    vy:
-                        b.vy - 1,
-
-                    radius:4
-                });
-            }
-        );
-
-        enemyBullets.push(
-            ...add
-        );
+                8
+            );
+        }
     }
 }
 
 function drawOugi4(){
 
-    // 特に描画なし
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.3)";
+
+    ctx.lineWidth = 40;
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        silf.x,
+
+        silf.y,
+
+        40,
+
+        0,
+
+        Math.PI * 2
+    );
+
+    ctx.stroke();
 }
