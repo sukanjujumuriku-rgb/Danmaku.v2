@@ -29,6 +29,39 @@ document.addEventListener(
         }
 
         keys[e.code]=true;
+
+        if(
+    e.code === "KeyF"
+){
+
+    if(
+        fTimer <= 0
+    ){
+
+        fCount = 0;
+    }
+
+    fCount++;
+
+    fTimer = 60;
+
+    if(
+        fCount >= 3
+    ){
+
+        player.debug =
+            !player.debug;
+
+        fCount = 0;
+
+        fTimer = 0;
+
+        console.log(
+            "DEBUG:",
+            player.debug
+        );
+    }
+}
     }
 );
 
