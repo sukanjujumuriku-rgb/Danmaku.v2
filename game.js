@@ -11,6 +11,9 @@ const ctx =
 
 const keys = {};
 
+let fCount = 0;
+let fTimer = 0;
+
 document.addEventListener(
     "keydown",
     e=>{
