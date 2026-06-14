@@ -8,7 +8,7 @@ const player = {
 
     radius:8,
 
-    hp:1
+    hp:1,
 
     debug:false
 };
