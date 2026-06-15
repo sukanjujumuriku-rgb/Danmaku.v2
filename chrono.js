@@ -185,6 +185,10 @@ function drawChrono(){
         chrono.spell
     ){
 
+        case 0:
+            drawChronoOugi1();
+            break;
+            
         case 1:
             drawChronoOugi2();
             break;
