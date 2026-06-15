@@ -10,119 +10,40 @@ function updateOugi4(){
     silf.y =
         150;
 
-    let rotSpeed = 0;
-
-    const cycle =
-        ougi4Timer % 360;
-
-    // 正転
+    let rot = 0.04;
 
     if(
-        cycle < 120
+        ougi4Timer > 300
     ){
-
-        rotSpeed = 0.08;
-    }
-
-    // 停止
-
-    else if(
-        cycle < 180
-    ){
-
-        rotSpeed = 0;
-    }
-
-    // 逆転
-
-    else if(
-        cycle < 300
-    ){
-
-        rotSpeed = -0.08;
-    }
-
-    // 超加速
-
-    else{
-
-        rotSpeed = 0.25;
+        rot = -0.04;
     }
 
     if(
-        ougi4Timer % 2 === 0
+        ougi4Timer > 500
+    ){
+        rot = 0.1;
+    }
+
+    if(
+        ougi4Timer % 3 === 0
     ){
 
         const base =
 
             ougi4Timer *
-            rotSpeed;
+            rot;
 
         for(
-            let ring = 0;
-            ring < 3;
-            ring++
-        ){
-
-            const angle =
-
-                base +
-
-                ring *
-
-                Math.PI * 2 / 3;
-
-            spawnEnemyBullet(
-
-                silf.x,
-
-                silf.y,
-
-                Math.cos(angle) * 3,
-
-                Math.sin(angle) * 3,
-
-                6
-            );
-
-            spawnEnemyBullet(
-
-                silf.x,
-
-                silf.y,
-
-                Math.cos(
-                    angle +
-                    Math.PI
-                ) * 3,
-
-                Math.sin(
-                    angle +
-                    Math.PI
-                ) * 3,
-
-                6
-            );
-        }
-    }
-
-    // 停止直前にリング生成
-
-    if(
-        cycle === 118 ||
-        cycle === 298
-    ){
-
-        for(
-            let i = 0;
-            i < 36;
+            let i=0;
+            i<3;
             i++
         ){
 
             const a =
 
-                Math.PI * 2 / 36
-                * i;
+                base +
+
+                Math.PI * 2 / 3 * i;
 
             spawnEnemyBullet(
 
@@ -130,37 +51,12 @@ function updateOugi4(){
 
                 silf.y,
 
-                Math.cos(a) * 2,
+                Math.cos(a) * 3,
 
-                Math.sin(a) * 2,
+                Math.sin(a) * 3,
 
-                8
+                7
             );
         }
     }
-}
-
-function drawOugi4(){
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,0.3)";
-
-    ctx.lineWidth = 40;
-
-    ctx.beginPath();
-
-    ctx.arc(
-
-        silf.x,
-
-        silf.y,
-
-        40,
-
-        0,
-
-        Math.PI * 2
-    );
-
-    ctx.stroke();
 }
