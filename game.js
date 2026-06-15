@@ -1,4 +1,5 @@
 alert("game.js");
+
 const canvas =
     document.getElementById(
         "game"
@@ -13,6 +14,10 @@ const keys = {};
 
 let fCount = 0;
 let fTimer = 0;
+
+let timer = 5400;
+
+let startDelay = 180;
 
 document.addEventListener(
     "keydown",
@@ -31,37 +36,37 @@ document.addEventListener(
         keys[e.code]=true;
 
         if(
-    e.code === "KeyF"
-){
+            e.code==="KeyF"
+        ){
 
-    if(
-        fTimer <= 0
-    ){
+            if(
+                fTimer <= 0
+            ){
 
-        fCount = 0;
-    }
+                fCount = 0;
+            }
 
-    fCount++;
+            fCount++;
 
-    fTimer = 60;
+            fTimer = 60;
 
-    if(
-        fCount >= 3
-    ){
+            if(
+                fCount >= 3
+            ){
 
-        player.debug =
-            !player.debug;
+                player.debug =
+                    !player.debug;
 
-        fCount = 0;
+                fCount = 0;
 
-        fTimer = 0;
+                fTimer = 0;
 
-        console.log(
-            "DEBUG:",
-            player.debug
-        );
-    }
-}
+                console.log(
+                    "DEBUG:",
+                    player.debug
+                );
+            }
+        }
     }
 );
 
@@ -72,9 +77,6 @@ document.addEventListener(
         keys[e.code]=false;
     }
 );
-
-let timer =
-    60 * 60;
 
 function drawUI(){
 
@@ -91,7 +93,7 @@ function drawUI(){
     );
 
     ctx.fillText(
-        "STAGE 1",
+        "CHRONOA",
         20,
         80
     );
@@ -103,23 +105,37 @@ function drawUI(){
         700,
         40
     );
+
+    if(
+        player.debug
+    ){
+
+        ctx.fillStyle =
+            "lime";
+
+        ctx.fillText(
+            "DEBUG",
+            20,
+            120
+        );
+    }
 }
 
 function gameLoop(){
 
     if(
-    fTimer > 0
-){
-
-    fTimer--;
-
-    if(
-        fTimer <= 0
+        fTimer > 0
     ){
 
-        fCount = 0;
+        fTimer--;
+
+        if(
+            fTimer <= 0
+        ){
+
+            fCount = 0;
+        }
     }
-}
 
     ctx.clearRect(
         0,
@@ -128,17 +144,55 @@ function gameLoop(){
         canvas.height
     );
 
+    // 開始3秒猶予
+
+    if(
+        startDelay > 0
+    ){
+
+        startDelay--;
+
+        drawPlayer();
+
+        drawChrono();
+
+        drawUI();
+
+        ctx.fillStyle =
+            "yellow";
+
+        ctx.font =
+            "72px sans-serif";
+
+        ctx.fillText(
+
+            Math.ceil(
+                startDelay / 60
+            ),
+
+            380,
+
+            320
+        );
+
+        requestAnimationFrame(
+            gameLoop
+        );
+
+        return;
+    }
+
     updatePlayer();
 
-    updateSilf();
+    updateChrono();
 
-    updateEnemyBullets();
+    updateChronoBullets();
 
     drawPlayer();
 
-    drawSilf();
+    drawChrono();
 
-    drawEnemyBullets();
+    drawChronoBullets();
 
     drawUI();
 
