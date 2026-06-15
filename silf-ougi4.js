@@ -60,3 +60,43 @@ function updateOugi4(){
         }
     }
 }
+
+function drawOugi4(){
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.3)";
+
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        silf.x,
+
+        silf.y,
+
+        60,
+
+        0,
+
+        Math.PI * 2
+    );
+
+    ctx.stroke();
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.7)";
+
+    ctx.font =
+        "18px sans-serif";
+
+    ctx.fillText(
+
+        "CHAOS CYCLONE",
+
+        280,
+
+        80
+    );
+}
