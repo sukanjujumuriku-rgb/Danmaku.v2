@@ -15,7 +15,16 @@ const keys = {};
 let fCount = 0;
 let fTimer = 0;
 
+// 0=シルフ
+// 1=クロノア
+
+let bossPhase = 0;
+
+// シルフ90秒
+
 let timer = 5400;
+
+// 開始3秒猶予
 
 let startDelay = 180;
 
@@ -33,7 +42,7 @@ document.addEventListener(
             e.preventDefault();
         }
 
-        keys[e.code]=true;
+        keys[e.code] = true;
 
         if(
             e.code==="KeyF"
@@ -74,7 +83,7 @@ document.addEventListener(
     "keyup",
     e=>{
 
-        keys[e.code]=false;
+        keys[e.code] = false;
     }
 );
 
@@ -93,15 +102,21 @@ function drawUI(){
     );
 
     ctx.fillText(
-        "CHRONOA",
+
+        bossPhase === 0
+        ? "SILF"
+        : "CHRONOA",
+
         20,
         80
     );
 
     ctx.fillText(
+
         Math.ceil(
             timer / 60
         ) + "s",
+
         700,
         40
     );
@@ -144,7 +159,7 @@ function gameLoop(){
         canvas.height
     );
 
-    // 開始3秒猶予
+    // 開始猶予
 
     if(
         startDelay > 0
@@ -154,7 +169,16 @@ function gameLoop(){
 
         drawPlayer();
 
-        drawChrono();
+        if(
+            bossPhase === 0
+        ){
+
+            drawSilf();
+        }
+        else{
+
+            drawChrono();
+        }
 
         drawUI();
 
@@ -184,19 +208,68 @@ function gameLoop(){
 
     updatePlayer();
 
-    updateChrono();
+    if(
+        bossPhase === 0
+    ){
 
-    updateChronoBullets();
+        updateSilf();
+
+        updateEnemyBullets();
+    }
+    else{
+
+        updateChrono();
+
+        updateChronoBullets();
+    }
 
     drawPlayer();
 
-    drawChrono();
+    if(
+        bossPhase === 0
+    ){
 
-    drawChronoBullets();
+        drawSilf();
+
+        drawEnemyBullets();
+    }
+    else{
+
+        drawChrono();
+
+        drawChronoBullets();
+    }
 
     drawUI();
 
     timer--;
+
+    // シルフ終了
+
+    if(
+        bossPhase === 0 &&
+        timer <= 0
+    ){
+
+        bossPhase = 1;
+
+        timer = 5400;
+
+        startDelay = 180;
+
+        enemyBullets.length = 0;
+
+        player.x = 400;
+        player.y = 500;
+
+        requestAnimationFrame(
+            gameLoop
+        );
+
+        return;
+    }
+
+    // GAME OVER
 
     if(
         player.hp <= 0
@@ -210,14 +283,17 @@ function gameLoop(){
 
         ctx.fillText(
             "GAME OVER",
-            150,
+            130,
             320
         );
 
         return;
     }
 
+    // CLEAR
+
     if(
+        bossPhase === 1 &&
         timer <= 0
     ){
 
