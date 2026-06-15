@@ -260,7 +260,7 @@ function updateOugi6(){
             if(
                 dist <
                 player.radius +
-                35
+                16
             ){
 
                 if(
@@ -295,7 +295,7 @@ function drawOugi6(){
                     "rgba(255,255,255,0.25)";
 
                 ctx.lineWidth =
-                    90;
+                    40;
 
                 ctx.beginPath();
 
@@ -315,7 +315,7 @@ function drawOugi6(){
                     "white";
 
                 ctx.lineWidth =
-                    35;
+                    16;
             }
 
             ctx.beginPath();
