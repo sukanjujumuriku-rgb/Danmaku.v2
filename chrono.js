@@ -41,7 +41,7 @@ function updateChrono(){
         Math.min(
             5,
             Math.floor(
-                chrono.timer / 600
+                chrono.timer / 900
             )
         );
 
@@ -79,6 +79,30 @@ function updateChrono(){
         ){
             timeLasers.length = 0;
         }
+
+        if(
+            typeof echoes !==
+            "undefined"
+        ){
+            echoes.length = 0;
+        }
+
+        if(
+            typeof pastPositions !==
+            "undefined"
+        ){
+            pastPositions.length = 0;
+        }
+
+        chronoOugi1Timer = 0;
+        chronoOugi2Timer = 0;
+        chronoOugi3Timer = 0;
+        chronoOugi4Timer = 0;
+        chronoOugi5Timer = 0;
+        chronoOugi6Timer = 0;
+
+        clockPhase = 0;
+        countdown = 3;
 
         chrono.spell =
             nextSpell;
@@ -186,19 +210,57 @@ function drawChrono(){
     ){
 
         case 0:
-            drawChronoOugi1();
+            if(
+                typeof drawChronoOugi1
+                !== "undefined"
+            ){
+                drawChronoOugi1();
+            }
             break;
-            
+
         case 1:
-            drawChronoOugi2();
+            if(
+                typeof drawChronoOugi2
+                !== "undefined"
+            ){
+                drawChronoOugi2();
+            }
+            break;
+
+        case 2:
+            if(
+                typeof drawChronoOugi3
+                !== "undefined"
+            ){
+                drawChronoOugi3();
+            }
+            break;
+
+        case 3:
+            if(
+                typeof drawChronoOugi4
+                !== "undefined"
+            ){
+                drawChronoOugi4();
+            }
             break;
 
         case 4:
-            drawChronoOugi5();
+            if(
+                typeof drawChronoOugi5
+                !== "undefined"
+            ){
+                drawChronoOugi5();
+            }
             break;
 
         case 5:
-            drawChronoOugi6();
+            if(
+                typeof drawChronoOugi6
+                !== "undefined"
+            ){
+                drawChronoOugi6();
+            }
             break;
     }
 }
@@ -214,6 +276,33 @@ function updateChronoBullets(){
 
         const b =
             chronoBullets[i];
+
+        // 曲線弾
+
+        if(
+            b.curve
+        ){
+
+            b.angle +=
+                b.turn;
+
+            const speed =
+
+                Math.sqrt(
+                    b.vx * b.vx +
+                    b.vy * b.vy
+                );
+
+            b.vx =
+                Math.cos(
+                    b.angle
+                ) * speed;
+
+            b.vy =
+                Math.sin(
+                    b.angle
+                ) * speed;
+        }
 
         b.x += b.vx;
         b.y += b.vy;
@@ -247,17 +336,58 @@ function updateChronoBullets(){
             }
         }
 
+        // 永久機関用
+
         if(
-            b.x < -200 ||
-            b.x > canvas.width + 200 ||
-            b.y < -200 ||
-            b.y > canvas.height + 200
+            b.eternal
         ){
 
-            chronoBullets.splice(
-                i,
-                1
-            );
+            if(
+                b.x < 0
+            ){
+                b.x =
+                    canvas.width;
+            }
+
+            if(
+                b.x >
+                canvas.width
+            ){
+                b.x = 0;
+            }
+
+            if(
+                b.y < 0
+            ){
+                b.y =
+                    canvas.height;
+            }
+
+            if(
+                b.y >
+                canvas.height
+            ){
+                b.y = 0;
+            }
+        }
+        else{
+
+            if(
+                b.x < -200 ||
+                b.x >
+                canvas.width + 200 ||
+                b.y < -200 ||
+                b.y >
+                canvas.height + 200
+            ){
+
+                chronoBullets.splice(
+                    i,
+                    1
+                );
+
+                continue;
+            }
         }
     }
 }
@@ -267,8 +397,25 @@ function drawChronoBullets(){
     chronoBullets.forEach(
         b=>{
 
-            ctx.fillStyle =
-                "#88ddff";
+            if(
+                b.eternal
+            ){
+
+                ctx.fillStyle =
+                    "#66ffff";
+            }
+            else if(
+                b.curve
+            ){
+
+                ctx.fillStyle =
+                    "#ff88ff";
+            }
+            else{
+
+                ctx.fillStyle =
+                    "#88ddff";
+            }
 
             ctx.beginPath();
 
