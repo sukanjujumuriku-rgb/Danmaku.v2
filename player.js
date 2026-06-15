@@ -4,7 +4,7 @@ const player = {
     x:400,
     y:500,
 
-    speed:8,
+    speed:5,
 
     radius:8,
 
