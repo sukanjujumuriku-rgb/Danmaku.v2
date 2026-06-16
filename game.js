@@ -17,16 +17,26 @@ let fTimer = 0;
 
 // 0=シルフ
 // 1=クロノア
+// 2=グラヴィス
 
 let bossPhase = 0;
 
-// シルフ90秒
+// 各ボス90秒
 
 let timer = 5400;
 
-// 開始3秒猶予
+// 開始猶予3秒
 
 let startDelay = 180;
+
+const bossNames = [
+
+    "SILF",
+
+    "CHRONOA",
+
+    "GRAVIS"
+];
 
 document.addEventListener(
     "keydown",
@@ -51,7 +61,6 @@ document.addEventListener(
             if(
                 fTimer <= 0
             ){
-
                 fCount = 0;
             }
 
@@ -103,9 +112,9 @@ function drawUI(){
 
     ctx.fillText(
 
-        bossPhase === 0
-        ? "SILF"
-        : "CHRONOA",
+        bossNames[
+            bossPhase
+        ],
 
         20,
         80
@@ -121,6 +130,15 @@ function drawUI(){
         40
     );
 
+    ctx.fillText(
+
+        "HP: " +
+        player.hp,
+
+        20,
+        120
+    );
+
     if(
         player.debug
     ){
@@ -131,8 +149,105 @@ function drawUI(){
         ctx.fillText(
             "DEBUG",
             20,
-            120
+            160
         );
+    }
+}
+
+function resetBossData(){
+
+    if(
+        typeof enemyBullets !==
+        "undefined"
+    ){
+        enemyBullets.length = 0;
+    }
+
+    if(
+        typeof chronoBullets !==
+        "undefined"
+    ){
+        chronoBullets.length = 0;
+    }
+
+    if(
+        typeof graBullets !==
+        "undefined"
+    ){
+        graBullets.length = 0;
+    }
+
+    player.reverseControl =
+        false;
+
+    player.gravitySlow =
+        1;
+
+    player.x = 400;
+    player.y = 500;
+}
+
+function updateCurrentBoss(){
+
+    switch(
+        bossPhase
+    ){
+
+        case 0:
+
+            updateSilf();
+
+            updateEnemyBullets();
+
+            break;
+
+        case 1:
+
+            updateChrono();
+
+            updateChronoBullets();
+
+            break;
+
+        case 2:
+
+            updateGra();
+
+            updateGraBullets();
+
+            break;
+    }
+}
+
+function drawCurrentBoss(){
+
+    switch(
+        bossPhase
+    ){
+
+        case 0:
+
+            drawSilf();
+
+            drawEnemyBullets();
+
+            break;
+
+        case 1:
+
+            drawChrono();
+
+            drawChronoBullets();
+
+            break;
+
+        case 2:
+
+            drawGra();
+
+            drawGraBullets();
+
+            break;
     }
 }
 
@@ -146,7 +261,7 @@ function gameLoop(){
 
         if(
             fTimer <= 0
-        ){
+            ){
 
             fCount = 0;
         }
@@ -159,7 +274,7 @@ function gameLoop(){
         canvas.height
     );
 
-    // 開始猶予
+    // 開始カウント
 
     if(
         startDelay > 0
@@ -169,15 +284,21 @@ function gameLoop(){
 
         drawPlayer();
 
-        if(
-            bossPhase === 0
+        switch(
+            bossPhase
         ){
 
-            drawSilf();
-        }
-        else{
+            case 0:
+                drawSilf();
+                break;
 
-            drawChrono();
+            case 1:
+                drawChrono();
+                break;
+
+            case 2:
+                drawGra();
+                break;
         }
 
         drawUI();
@@ -208,66 +329,15 @@ function gameLoop(){
 
     updatePlayer();
 
-    if(
-        bossPhase === 0
-    ){
-
-        updateSilf();
-
-        updateEnemyBullets();
-    }
-    else{
-
-        updateChrono();
-
-        updateChronoBullets();
-    }
+    updateCurrentBoss();
 
     drawPlayer();
 
-    if(
-        bossPhase === 0
-    ){
-
-        drawSilf();
-
-        drawEnemyBullets();
-    }
-    else{
-
-        drawChrono();
-
-        drawChronoBullets();
-    }
+    drawCurrentBoss();
 
     drawUI();
 
     timer--;
-
-    // シルフ終了
-
-    if(
-        bossPhase === 0 &&
-        timer <= 0
-    ){
-
-        bossPhase = 1;
-
-        timer = 5400;
-
-        startDelay = 180;
-
-        enemyBullets.length = 0;
-
-        player.x = 400;
-        player.y = 500;
-
-        requestAnimationFrame(
-            gameLoop
-        );
-
-        return;
-    }
 
     // GAME OVER
 
@@ -290,12 +360,32 @@ function gameLoop(){
         return;
     }
 
-    // CLEAR
+    // ボス切替
 
     if(
-        bossPhase === 1 &&
         timer <= 0
     ){
+
+        if(
+            bossPhase < 2
+        ){
+
+            bossPhase++;
+
+            timer = 5400;
+
+            startDelay = 180;
+
+            resetBossData();
+
+            requestAnimationFrame(
+                gameLoop
+            );
+
+            return;
+        }
+
+        // 全ボス撃破
 
         ctx.fillStyle =
             "lime";
